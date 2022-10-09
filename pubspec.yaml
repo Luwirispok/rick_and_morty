@@ -1,5 +1,5 @@
 name: rick_and_morty
-description: A new Flutter project.
+description: Project for the practice of the "Clean architecture" template.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -13,18 +13,21 @@ dependencies:
     sdk: flutter
 
 
-  cupertino_icons: ^1.0.2
-  # https://pub.dev/packages/equatable
+  cupertino_icons: ^1.0.5
+  #https://pub.dev/packages/equatable
   equatable: ^2.0.5
-  # https://pub.dev/packages/dartz
+  #https://pub.dev/packages/dartz
   dartz: ^0.10.1
+  #https://pub.dev/packages/http
   http: ^0.13.5
+  #https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.1
 
 flutter:
 

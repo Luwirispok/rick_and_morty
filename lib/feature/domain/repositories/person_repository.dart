@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:rick_and_morty/core/failures.dart';
+import 'package:rick_and_morty/core/error/failures.dart';
 import 'package:rick_and_morty/feature/domain/entities/person_entity.dart';
 
 //Контракт, который будет реализован в Data/Repository

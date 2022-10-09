@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:rick_and_morty/core/failures.dart';
+import 'package:rick_and_morty/core/error/failures.dart';
 
 //абстрактный класс, который создаст шаблон для остальных UseCases
 abstract class UseCase<Type, Params> {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:rick_and_morty/core/error/exception.dart';
 import 'package:rick_and_morty/feature/data/models/person_model.dart';
@@ -19,10 +20,12 @@ abstract class PersonRemoteDataSource {
 const String baseUrl = 'https://rickandmortyapi.com/api/character/';
 
 class PersonRemoteDataSourceImpl implements PersonRemoteDataSource {
-  late final http.Client client;
+  final http.Client client;
+
+  PersonRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<List<PersonModel>> getAllPersons(int page) async {
+  Future<List<PersonModel>> getAllPersons(int page) {
     return _getPersonFromUrl('$baseUrl?page=$page');
   }
 
@@ -32,6 +35,7 @@ class PersonRemoteDataSourceImpl implements PersonRemoteDataSource {
   }
 
   Future<List<PersonModel>> _getPersonFromUrl(String url) async {
+    log(url);
     final uri = Uri.parse(url);
     final headers = {'Content-Type': 'application/json'};
     final result = await client.get(uri, headers: headers);

@@ -12,21 +12,21 @@ part 'person_search_event.dart';
 part 'person_search_state.dart';
 
 class PersonSearchBloc extends Bloc<PersonSearchEvent, PersonSearchState> {
-  PersonSearchBloc({required this.searchPerson}) : super(PersonEmpty()) {
+  PersonSearchBloc({required this.searchPerson}) : super(PersonEmptyState()) {
     on<SearchPersonsEvent>(_onSearchPersonsEvent);
   }
 
   final SearchPerson searchPerson;
 
   FutureOr<void> _onSearchPersonsEvent(SearchPersonsEvent event, Emitter<PersonSearchState> emit) async {
-    emit(PersonSearchLoading());
+    emit(PersonSearchLoadingState());
     List<PersonEntity>? data;
     Failure? error;
 
     final result = await searchPerson.call(SearchPersonParams(query: event.personQuery));
     emit(result.fold(
-      (failure) => PersonSearchError(message: _mapFailureToMessage(failure)),
-      (person) => PersonSearchLoaded(persons: person),
+      (failure) => PersonSearchErrorState(message: _mapFailureToMessage(failure)),
+      (person) => PersonSearchLoadedState(persons: person),
     ));
   }
 

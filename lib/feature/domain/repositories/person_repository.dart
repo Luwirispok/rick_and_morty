@@ -4,7 +4,6 @@ import 'package:rick_and_morty/feature/domain/entities/person_entity.dart';
 
 //Контракт, который будет реализован в Data/Repository
 abstract class PersonRepository {
-
   /*
   Either<L, R> позволяет обрабатывать ошибки и данные полученные при запросе
   Разницы в какой дженерик записывать нет, как удобно

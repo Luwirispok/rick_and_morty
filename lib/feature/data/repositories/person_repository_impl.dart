@@ -30,8 +30,7 @@ class PersonRepositoryImpl implements PersonRepository {
     // return await _getPersonsCopy(await remoteDataSource.searchPerson(query));
   }
 
-  Future<Either<Failure, List<PersonModel>>> _getPersons(
-      Future<List<PersonModel>> Function() getPersons) async {
+  Future<Either<Failure, List<PersonModel>>> _getPersons(Future<List<PersonModel>> Function() getPersons) async {
     //Узнаем наличие сети
     if (await networkInfo.isConnected) {
       try {
@@ -45,36 +44,37 @@ class PersonRepositoryImpl implements PersonRepository {
         //Если при запросе ошибка на сервере, то getPersons() произведет ServerException
         return Left(ServerFailure());
       }
-
-    } else { //Если сети нет
+    } else {
+      //Если сети нет
       try {
         //Берем данные из локального хранилища
         final locationPerson = await localDataSource.getLastPersonsFromCache();
         return Right(locationPerson);
-      } on CacheException { //Если в sharedPreferences пусто, то произойдет CacheException
+      } on CacheException {
+        //Если в sharedPreferences пусто, то произойдет CacheException
         return Left(CacheFailure());
       }
     }
   }
 
-  //Аналог, если не передавать фнкцию в качестве входных параметров
+//Аналог, если не передавать фнкцию в качестве входных параметров
 
-  // Future<Either<Failure, List<PersonModel>>> _getPersonsCopy(
-  //     List<PersonModel> remotePerson) async {
-  //   if (await networkInfo.isConnected) {
-  //     try {
-  //       localDataSource.personsToCache(remotePerson);
-  //       return Right(remotePerson);
-  //     } on ServerException {
-  //       return Left(ServerFailure());
-  //     }
-  //   } else {
-  //     try {
-  //       final locationPerson = await localDataSource.getLastPersonsFromCache();
-  //       return Right(locationPerson);
-  //     } on CacheException {
-  //       return Left(CacheFailure());
-  //     }
-  //   }
-  // }
+// Future<Either<Failure, List<PersonModel>>> _getPersonsCopy(
+//     List<PersonModel> remotePerson) async {
+//   if (await networkInfo.isConnected) {
+//     try {
+//       localDataSource.personsToCache(remotePerson);
+//       return Right(remotePerson);
+//     } on ServerException {
+//       return Left(ServerFailure());
+//     }
+//   } else {
+//     try {
+//       final locationPerson = await localDataSource.getLastPersonsFromCache();
+//       return Right(locationPerson);
+//     } on CacheException {
+//       return Left(CacheFailure());
+//     }
+//   }
+// }
 }

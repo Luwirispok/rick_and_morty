@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rick_and_morty/core/error/failures.dart';
@@ -8,33 +10,31 @@ import 'package:rick_and_morty/feature/domain/use_cases/params/page_person_param
 part 'person_list_state.dart';
 
 class PersonListCubit extends Cubit<PersonListState> {
-  PersonListCubit({required this.getAllPersons}) : super(PersonEmpty());
+  PersonListCubit({required this.getAllPersons}) : super(PersonEmptyState());
 
   final GetAllPersons getAllPersons;
   int page = 1;
 
-  void loadPerson() async {
-    if (state is PersonLoading) return;
+  void loadPersonCubit() async {
+    if (state is PersonLoadingState) return;
 
     final currentState = state;
 
     List<PersonEntity> oldPerson = <PersonEntity>[];
-    if (currentState is PersonLoaded) {
+    if (currentState is PersonLoadedState) {
       oldPerson = currentState.personList;
     }
-    emit(PersonLoading(oldPersonList: oldPerson, isFirstFetch: page == 1));
+    emit(PersonLoadingState(oldPersonList: oldPerson, isFirstFetch: page == 1));
 
     final result = await getAllPersons.call(PagePersonParams(page: page));
-    result.fold(
-            (error) => emit(PersonError(message: _mapFailureToMessage(error))),
-            (character) {
-          page++;
-          final persons = (state as PersonLoading).oldPersonList;
-          persons.addAll(character);
-          print('List length: ${persons.length.toString()}');
-          emit(PersonLoaded(personList: persons));
-        }
-    );
+
+    result.fold((error) => emit(PersonErrorState(message: _mapFailureToMessage(error))), (character) {
+      page++;
+      final persons = (state as PersonLoadingState).oldPersonList;
+      persons.addAll(character);
+      log('List length: ${persons.length.toString()}');
+      emit(PersonLoadedState(personList: persons));
+    });
   }
 
   String _mapFailureToMessage(Failure failure) {

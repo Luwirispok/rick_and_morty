@@ -7,16 +7,16 @@ abstract class PersonListState extends Equatable {
   List<Object> get props => [];
 }
 
-class PersonEmpty extends PersonListState {
+class PersonEmptyState extends PersonListState {
   @override
   List<Object> get props => [];
 }
 
-class PersonLoading extends PersonListState {
+class PersonLoadingState extends PersonListState {
   final List<PersonEntity> oldPersonList;
   final bool isFirstFetch;
 
-  const PersonLoading({
+  const PersonLoadingState({
     required this.oldPersonList,
     required this.isFirstFetch,
   });
@@ -25,19 +25,19 @@ class PersonLoading extends PersonListState {
   List<Object> get props => [oldPersonList];
 }
 
-class PersonLoaded extends PersonListState {
+class PersonLoadedState extends PersonListState {
   final List<PersonEntity> personList;
 
-  const PersonLoaded({required this.personList});
+  const PersonLoadedState({required this.personList});
 
   @override
   List<Object> get props => [personList];
 }
 
-class PersonError extends PersonListState {
+class PersonErrorState extends PersonListState {
   final String message;
 
-  const PersonError({required this.message});
+  const PersonErrorState({required this.message});
 
   @override
   List<Object> get props => [message];

@@ -15,7 +15,7 @@ class PersonListCubit extends Cubit<PersonListState> {
   final GetAllPersons getAllPersons;
   int page = 1;
 
-  void loadPersonCubit() async {
+  Future<void> loadPersonCubit() async {
     if (state is PersonLoadingState) return;
 
     final currentState = state;

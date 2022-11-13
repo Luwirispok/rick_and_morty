@@ -42,7 +42,7 @@ class PersonRemoteDataSourceImpl implements PersonRemoteDataSource {
     int? code = result.statusCode;
     if (code.toString().startsWith('2')) {
       final data = json.decode(result.body);
-      return (data['result'] as List).map((person) => PersonModel.fromJson(person)).toList();
+      return (data['results'] as List).map((person) => PersonModel.fromJson(person)).toList();
     } else {
       log(ServerException(code: code).toString());
       throw ServerException(code: code);

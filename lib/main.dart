@@ -12,7 +12,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider<PersonListCubit>(
-          create: (context) => Locator.injection<PersonListCubit>(),
+          create: (context) => Locator.injection<PersonListCubit>()..loadPersonCubit(),
         ),
         BlocProvider<PersonSearchBloc>(
           create: (context) => Locator.injection<PersonSearchBloc>(),

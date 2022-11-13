@@ -54,7 +54,8 @@ class Locator {
     );
 
     //External
-    injection.registerLazySingleton(() async => await SharedPreferences.getInstance());
+    final sharedPreferences = await SharedPreferences.getInstance();
+    injection.registerLazySingleton(() => sharedPreferences);
     injection.registerLazySingleton(() => http.Client());
     injection.registerLazySingleton(() => InternetConnectionChecker());
   }

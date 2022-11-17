@@ -38,14 +38,18 @@ class PersonRemoteDataSourceImpl implements PersonRemoteDataSource {
     log(url);
     final uri = Uri.parse(url);
     final headers = {'Content-Type': 'application/json'};
-    final result = await client.get(uri, headers: headers);
+    final result = await client.get(uri, headers: headers).catchError((error) {
+      log("GetPerson: $error");
+      throw const ServerException();
+    });
     int? code = result.statusCode;
+    // log(json.decode(result.body).toString());
     if (code.toString().startsWith('2')) {
       final data = json.decode(result.body);
       return (data['results'] as List).map((person) => PersonModel.fromJson(person)).toList();
     } else {
-      log(ServerException(code: code).toString());
-      throw ServerException(code: code);
+      log("$result: ${code.toString()}");
+      throw const ServerException();
     }
   }
 }

@@ -1,15 +1,13 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 
 ///Ошибки от внешних источников. Например, проблемы при ответе на запрос
 class ServerException extends Equatable implements Exception {
-  final int code;
 
-  const ServerException({required this.code});
+
+  const ServerException();
 
   @override
-  List<Object?> get props => [code];
+  List<Object?> get props => [];
 
   @override
   bool get stringify => true;

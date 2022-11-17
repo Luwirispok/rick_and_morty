@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/common/app_colors.dart';
@@ -11,7 +13,7 @@ class PersonScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _buildAppBar(),
-        body: const SafeArea(
+        body: SafeArea(
           child: PersonList(),
         ),
       );
@@ -30,23 +32,54 @@ class PersonScreen extends StatelessWidget {
 }
 
 class PersonList extends StatelessWidget {
-  const PersonList({super.key});
+  PersonList({super.key});
+
+  final scrollController = ScrollController();
+
+  void setupScrollController(BuildContext context) {
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge) {
+        if (scrollController.position.pixels != 0) {
+          context.read<PersonListCubit>().loadPersonCubit();
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    setupScrollController(context);
     List<PersonEntity> persons = [];
+
+    bool isLoading = false;
+
     return BlocBuilder<PersonListCubit, PersonListState>(
       builder: (context, state) {
         if (state is PersonLoadingState && state.isFirstFetch) {
           return _loadingIndicator();
-        }
-        if (state is PersonLoadedState) {
+        } else if (state is PersonLoadingState) {
+          persons = state.oldPersonList;
+          isLoading = true;
+        } else if (state is PersonLoadedState) {
           persons = state.personList;
+        } else if (state is PersonErrorState) {
+          log(state.message);
+          return _buildError(state.message);
         }
         return ListView.separated(
+          controller: scrollController,
           padding: const EdgeInsets.all(8),
-          itemCount: persons.length,
-          itemBuilder: (context, index) => PersonCard(person: persons[index]),
+          itemCount: persons.length + (isLoading ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index < persons.length) {
+              return PersonCard(person: persons[index]);
+            } else {
+              // Timer(const Duration(seconds: 1), () {
+              //   scrollController.jumpTo(scrollController.position.maxScrollExtent);
+              // });
+              return _loadingIndicator();
+            }
+          },
           separatorBuilder: (context, index) => const Divider(
             color: AppColors.cellBackground,
           ),
@@ -55,12 +88,17 @@ class PersonList extends StatelessWidget {
     );
   }
 
-  Widget _loadingIndicator() => const Padding(
-        padding: EdgeInsets.all(8),
-        child: Center(
-          child: CircularProgressIndicator(
-            color: AppColors.white,
-          ),
+  Widget _loadingIndicator() => const Center(
+        child: CircularProgressIndicator(
+          color: AppColors.white,
+        ),
+      );
+
+  Widget _buildError(String text) => Text(
+        text,
+        style: const TextStyle(
+          color: AppColors.white,
+          fontSize: 25,
         ),
       );
 }
